@@ -5,9 +5,8 @@
   "author": "WuXiaoguo <923458883@qq.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
-    "build": "node build/build.js"
+    "dev:client": "set NODE_ENV_TYPE=client && webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "build:client": "set NODE_ENV_TYPE=client && node build/build.js"
   },
   "dependencies": {
     "axios": "^0.17.0",

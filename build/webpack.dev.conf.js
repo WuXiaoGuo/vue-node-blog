@@ -1,8 +1,10 @@
 'use strict'
 const utils = require('./utils')
 const webpack = require('webpack')
-const config = require('../config')
 const merge = require('webpack-merge')
+
+const isAdmin = process.env.NODE_ENV_TYPE === 'admin'
+const config = isAdmin ? require('../config').admin : require('../config').client
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -14,22 +16,27 @@ const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
+  // module 配置模块相关
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
-  // cheap-module-eval-source-map is faster for development
+  // 配置source-map类型
   devtool: config.dev.devtool,
 
-  // these devServer options should be customized in /config/index.js
+  // devServer DevServer相关的配置
   devServer: {
     clientLogLevel: 'warning',
+    // historyApiFallback 是否开发HTML5 History API网页
     historyApiFallback: {
       rewrites: [
         { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
       ],
     },
+    // hot 是否开启模块热替换功能
     hot: true,
+    // contentBase 配置DevServer HTTP服务器的文件根服务器 （CopyWebpackPlugin）这个插件可以再配置
     contentBase: false, // since we use CopyWebpackPlugin.
+    // compress 是否开启Gzip压缩
     compress: true,
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
@@ -38,12 +45,16 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       ? { warnings: false, errors: true }
       : false,
     publicPath: config.dev.assetsPublicPath,
+    // proxy 代理到后端服务接口
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
+      // poll 不停的询问系统指定的文件有没有发生变化，默认每秒询问1000次
+      // poll: 1000
       poll: config.dev.poll,
     }
   },
+  // plugins 配置插件
   plugins: [
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')

@@ -8,7 +8,9 @@ const rm = require('rimraf')
 const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
-const config = require('../config')
+
+const isAdmin = process.env.NODE_ENV_TYPE === 'admin'
+const config = isAdmin ? require("../config").admin : require('../config').client;
 const webpackConfig = require('./webpack.prod.conf')
 
 const spinner = ora('building for production...')

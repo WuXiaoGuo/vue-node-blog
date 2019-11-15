@@ -1,7 +1,9 @@
 "use strict";
 const path = require("path");
 const utils = require("./utils");
-const config = require("../config");
+const isAdmin = process.env.NODE_ENV_TYPE === 'admin'
+
+const config = isAdmin ? require("../config").admin : require('../config').client;
 const vueLoaderConfig = require("./vue-loader.conf");
 
 function resolve(dir) {
@@ -9,27 +11,38 @@ function resolve(dir) {
 }
 
 module.exports = {
+  // context webpack使用的根目录，
   context: path.resolve(__dirname, "../"),
+  // entry 表示入口，webpack执行构建的第一步从Entry开始
   entry: {
-    app: "./src/main.js"
+    app: isAdmin ? resolve("/src/admin/main.js") : resolve("/src/client/main.js")
   },
+  // output 如何输出结果：在webpack经过一系列处理后，如何输出最终想要的代码
   output: {
+    // path 输出文件存放的目录，
     path: config.build.assetsRoot,
+    // filename 输出文件的名称
     filename: "[name].js",
+    // publicPath 发布到线上的所有资源的url前缀
     publicPath:
       process.env.NODE_ENV === "production"
         ? config.build.assetsPublicPath
         : config.dev.assetsPublicPath
   },
+  // resolve 配置寻找模块的规则
   resolve: {
+    // extensions 模块的后缀名
     extensions: [".js", ".vue", ".json"],
+    // alias 模块别名配置，用于映射模块
     alias: {
       vue$: "vue/dist/vue.esm.js",
-      "@": resolve("src"),
-      assets: resolve("src/assets")
+      "@": isAdmin ? resolve("src/admin") : resolve("src/client"),
+      'assets': isAdmin ? resolve("src/admin/assets") : resolve("src/client/assets")
     }
   },
+  // module 配置模块相关
   module: {
+    // rules 配置loader
     rules: [
       {
         test: /\.vue$/,

@@ -85,7 +85,7 @@ export default {
   .content {
     width: 100%;
     padding: 10px;
-    background: #f9f9f3 url("../../assets/images/note-bg.jpg");
+    background: #f9f9f3 url("~assets/images/note-bg.jpg");
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.25);
 
     .box {

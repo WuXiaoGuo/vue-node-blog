@@ -2,7 +2,8 @@
 const path = require('path')
 const utils = require('./utils')
 const webpack = require('webpack')
-const config = require('../config')
+const isAdmin = process.env.NODE_ENV_TYPE === 'admin'
+const config = isAdmin ? require('../config').admin : require('../config').client
 const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')

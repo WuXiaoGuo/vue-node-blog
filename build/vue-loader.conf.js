@@ -1,6 +1,7 @@
 'use strict'
 const utils = require('./utils')
-const config = require('../config')
+const isAdmin = process.env.NODE_ENV_TYPE === 'admin'
+const config = isAdmin ? require('../config').admin : require('../config').client
 const isProduction = process.env.NODE_ENV === 'production'
 const sourceMapEnabled = isProduction
   ? config.build.productionSourceMap

@@ -1,6 +1,7 @@
 "use strict";
 const path = require("path");
-const config = require("../config");
+const isAdmin = process.env.NODE_ENV_TYPE === 'admin'
+const config = isAdmin ? require("../config").admin : require('../config').client;
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const packageConfig = require("../package.json");
 
@@ -66,7 +67,7 @@ exports.cssLoaders = function(options) {
     scss: generateLoaders("sass").concat({
       loader: "sass-resources-loader",
       options: {
-        resources: path.resolve(__dirname, "../src/assets/css/index.scss")
+        resources: isAdmin ? path.resolve(__dirname, "../src/admin/assets/css/index.scss") : path.resolve(__dirname, "../src/client/assets/css/index.scss")
       }
     }),
     stylus: generateLoaders("stylus"),
